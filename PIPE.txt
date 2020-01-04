@@ -1,0 +1,42 @@
+Program for Interprocess Communication Using PIPE:
+
+#include<stdio.h>
+#include<unistd.h>
+
+int main()
+{
+	int pid,fd[2];					
+	char c;
+pipe(fd);	 
+	
+pid=fork();			
+	
+if(pid==0)					
+	{
+		close(fd[1]);				
+		read(fd[0],&c,1);			
+		
+printf("\n server: reading data from pipe\n");
+		while(c!=';')
+		{
+			write(1,&c,1);			
+			read(fd[0],&c,1);
+		}
+		printf("\n server: finised reading from pipe \n");
+		close(fd[0]);
+	}
+	
+else							
+	{
+		printf("\n client: writing data into pipe \n");
+		close(fd[0]);				
+		printf("\n Enter data:");
+		while(c!=';')				
+		{
+			c=getchar();			
+			write (fd[1],&c,1);		
+		}
+printf("\n client: finishes writing data into pipe\n");
+		close(fd[1]);
+	}
+}
